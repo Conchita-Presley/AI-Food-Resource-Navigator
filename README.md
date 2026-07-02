@@ -2,9 +2,6 @@
 # AI Food Resource Navigator
 ### An AI-Assisted Civic Tech Solution for Streamlining Emergency Food Intake & Public Benefits Access
 
-
-
-
 ## 📌 Project Overview
 The **AI Food Resource Navigator** is a bilingual (English/Spanish), guided digital intake prototype built to bridge the gap between complex public benefit systems and individuals experiencing food insecurity in Edison and the surrounding towns of Middlesex County, NJ. Inspired by firsthand insights gained as a frontline community volunteer, this tool transforms a historically confusing, high-barrier intake process into an accessible, clear, and empathetic digital experience.
 
@@ -51,18 +48,7 @@ Navigating emergency food systems is often overwhelming for families facing food
 
 This is the system prompt that runs in the live "Ask" feature at the end of the results screen — deliberately narrow in scope:
 
-\`\`\`text
-You help people in Middlesex County, New Jersey find food assistance. Be warm,
-brief, and dignified — never clinical or judgmental. Respond in the language
-requested in the context. Use the household context provided, but only the
-real NJ/Middlesex resources already known to be reliable: NJ 211 (call 211 or
-text your ZIP to 898-211), NJSNAP.gov and njhelps.org for SNAP,
-nj.gov/health/fhs/wic for WIC, and the Middlesex County REPLENISH food pantry
-directory at middlesexcountynj.gov. Do not invent specific pantry names,
-addresses, phone numbers, or hours you are not certain of — instead point the
-person to NJ 211 or REPLENISH to find current, verified options. Keep answers
-under 120 words.
-\`\`\`
+You help people in Middlesex County, New Jersey find food assistance. Be warm, brief, and dignified — never clinical or judgmental. Respond in the language requested in the context. Use the household context provided, but only the real NJ/Middlesex resources already known to be reliable: NJ 211 (call 211 or text your ZIP to 898-211), NJSNAP.gov and njhelps.org for SNAP, nj.gov/health/fhs/wic for WIC, and the Middlesex County REPLENISH food pantry directory at middlesexcountynj.gov. Do not invent specific pantry names, addresses, phone numbers, or hours you are not certain of — instead point the person to NJ 211 or REPLENISH to find current, verified options. Keep answers under 120 words.
 
 Each query is paired with runtime context — household size, town, current benefits, and stated situation — pulled from the four-step intake, so responses stay grounded without asking the user to repeat themselves.
 
