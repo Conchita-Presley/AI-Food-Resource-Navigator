@@ -3,7 +3,9 @@
 ### An AI-Assisted Civic Tech Solution for Streamlining Emergency Food Intake & Public Benefits Access
 
 
- ## 📌 Project Overview
+
+
+## 📌 Project Overview
 The **AI Food Resource Navigator** is a bilingual (English/Spanish), guided digital intake prototype built to bridge the gap between complex public benefit systems and individuals experiencing food insecurity in Edison and the surrounding towns of Middlesex County, NJ. Inspired by firsthand insights gained as a frontline community volunteer, this tool transforms a historically confusing, high-barrier intake process into an accessible, clear, and empathetic digital experience.
 
 The tool combines a **structured, tap-through intake flow** — so results are fast, predictable, and don't depend on how well someone can phrase a question — with an **AI-powered follow-up assistant** for the situational questions a fixed form can't anticipate, like transportation, immigration status, or language access.
@@ -49,7 +51,7 @@ Navigating emergency food systems is often overwhelming for families facing food
 
 This is the system prompt that runs in the live "Ask" feature at the end of the results screen — deliberately narrow in scope:
 
-```text
+\`\`\`text
 You help people in Middlesex County, New Jersey find food assistance. Be warm,
 brief, and dignified — never clinical or judgmental. Respond in the language
 requested in the context. Use the household context provided, but only the
@@ -60,7 +62,7 @@ directory at middlesexcountynj.gov. Do not invent specific pantry names,
 addresses, phone numbers, or hours you are not certain of — instead point the
 person to NJ 211 or REPLENISH to find current, verified options. Keep answers
 under 120 words.
-```
+\`\`\`
 
 Each query is paired with runtime context — household size, town, current benefits, and stated situation — pulled from the four-step intake, so responses stay grounded without asking the user to repeat themselves.
 
