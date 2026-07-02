@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find Food Help — Middlesex County, NJ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f1ecdd;
+    --bg-deep:#e7e0c9;
+    --card:#fbf8ef;
+    --card-soft:#eee8d6;
+    --gold:#7f9a72;
+    --gold-soft:#a8bf99;
+    --coral:#c1694f;
+    --text:#33392e;
+    --text-muted:#71795f;
+    --wood:#b08b5e;
+    --wood-dark:#8a6a45;
+    --line:rgba(51,57,46,0.14);
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(ellipse at 50% -10%, #f8f4e7 0%, var(--bg) 55%, var(--bg-deep) 100%);
+    color:var(--text);
+    font-family:'Work Sans', sans-serif;
+    min-height:100vh;
+    padding:32px 18px 60px;
+    display:flex;
+    justify-content:center;
+  }
+  .wrap{ width:100%; max-width:620px; }
+
+  .header-row{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:10px; }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  .lang-btn{
+    background:var(--card); border:1.5px solid var(--line); color:var(--text);
+    font-family:'Work Sans', sans-serif; font-weight:600; font-size:13px;
+    padding:7px 14px; border-radius:20px; cursor:pointer; white-space:nowrap;
+    transition:border-color .15s ease;
+  }
+  .lang-btn:hover{ border-color:var(--gold); }
+  h1{
+    font-family:'Big Shoulders Display', sans-serif;
+    font-weight:800;
+    font-size:clamp(34px,7vw,48px);
+    line-height:0.98;
+    margin:0 0 12px;
+    letter-spacing:0.01em;
+  }
+  .sub{
+    color:var(--text-muted);
+    font-size:15.5px;
+    line-height:1.55;
+    max-width:48ch;
+    margin-bottom:28px;
+  }
+
+  .shelf-wrap{ margin-bottom:30px; }
+  .shelf{
+    position:relative;
+    height:54px;
+    background:linear-gradient(180deg, var(--gold-soft) 0%, var(--gold) 100%);
+    border-radius:8px;
+    display:flex;
+    align-items:flex-end;
+    padding:8px 10px 0;
+    gap:8px;
+    box-shadow: inset 0 -3px 0 rgba(0,0,0,0.20), 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .jar{
+    flex:1;
+    height:30px;
+    border-radius:5px 5px 3px 3px;
+    background:rgba(245,241,230,0.10);
+    border:1.5px solid rgba(245,241,230,0.18);
+    position:relative;
+    transition:all .45s cubic-bezier(.4,0,.2,1);
+    overflow:hidden;
+  }
+  .jar::before{
+    content:'';
+    position:absolute; top:-5px; left:50%; transform:translateX(-50%);
+    width:54%; height:6px; background:rgba(245,241,230,0.18);
+    border-radius:2px 2px 0 0;
+  }
+  .jar.filled{
+    background:linear-gradient(180deg, var(--wood), var(--wood-dark));
+    border-color:var(--wood-dark);
+    height:40px;
+    box-shadow:0 0 14px rgba(138,106,69,0.45);
+  }
+  .shelf-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    color:var(--text-muted);
+    margin-top:8px;
+    letter-spacing:0.04em;
+  }
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:26px 24px 24px;
+    box-shadow:0 14px 36px rgba(0,0,0,0.28);
+  }
+  .q-title{
+    font-family:'Big Shoulders Display', sans-serif;
+    font-weight:700;
+    font-size:25px;
+    margin:0 0 4px;
+  }
+  .q-hint{
+    color:var(--text-muted);
+    font-size:13.5px;
+    margin-bottom:18px;
+  }
+  .options{ display:flex; flex-direction:column; gap:10px; }
+  .opt{
+    text-align:left;
+    background:var(--card-soft);
+    border:1.5px solid var(--line);
+    color:var(--text);
+    padding:13px 16px;
+    border-radius:10px;
+    font-family:'Work Sans', sans-serif;
+    font-size:15px;
+    font-weight:500;
+    cursor:pointer;
+    transition:all .18s ease;
+  }
+  .opt:hover{ border-color:var(--gold); background:rgba(127,154,114,0.12); }
+  .opt.selected{ border-color:var(--gold); background:rgba(127,154,114,0.18); }
+  .opt small{ display:block; color:var(--text-muted); font-weight:400; margin-top:2px; font-size:12.5px; }
+
+  .num-row{ display:flex; align-items:center; gap:16px; margin:6px 0 4px; }
+  .num-btn{
+    width:42px;height:42px;border-radius:50%;
+    border:1.5px solid var(--line); background:var(--card-soft); color:var(--text);
+    font-size:20px; cursor:pointer; font-family:'IBM Plex Mono',monospace;
+  }
+  .num-btn:hover{ border-color:var(--gold); }
+  .num-val{
+    font-family:'Big Shoulders Display', sans-serif;
+    font-size:34px; min-width:50px; text-align:center;
+  }
+
+  .nav-row{ display:flex; justify-content:space-between; align-items:center; margin-top:24px; }
+  .btn-primary{
+    background:var(--gold); color:#1f2a1a; border:none;
+    font-family:'Work Sans',sans-serif; font-weight:700; font-size:14.5px;
+    padding:12px 22px; border-radius:9px; cursor:pointer;
+    transition:transform .15s ease;
+  }
+  .btn-primary:hover{ transform:translateY(-1px); }
+  .btn-primary:disabled{ opacity:0.4; cursor:not-allowed; transform:none; }
+  .btn-ghost{
+    background:none; border:none; color:var(--text-muted);
+    font-family:'Work Sans',sans-serif; font-size:14px; cursor:pointer;
+    text-decoration:underline; text-underline-offset:3px;
+  }
+  .btn-ghost:hover{ color:var(--text); }
+
+  .results h2{
+    font-family:'Big Shoulders Display', sans-serif;
+    font-size:26px; margin:0 0 4px;
+  }
+  .results .lead{ color:var(--text-muted); font-size:14.5px; margin-bottom:22px; line-height:1.5;}
+  .res-group{ margin-bottom:22px; }
+  .res-group h3{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--gold-soft); margin:0 0 10px;
+    border-bottom:1px solid var(--line); padding-bottom:8px;
+  }
+  .res-card{
+    background:var(--card-soft); border:1px solid var(--line); border-radius:10px;
+    padding:14px 16px; margin-bottom:10px;
+  }
+  .res-card .name{ font-weight:700; font-size:15px; margin-bottom:3px; }
+  .res-card .desc{ color:var(--text-muted); font-size:13.5px; line-height:1.5; margin-bottom:6px; }
+  .res-card .contact{
+    font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--gold-soft);
+  }
+  .res-card a{ color:var(--gold-soft); }
+  .disclaimer{
+    margin-top:20px; padding:14px 16px; background:rgba(193,105,79,0.10);
+    border:1px solid rgba(193,105,79,0.35); border-radius:10px;
+    font-size:13px; color:var(--text-muted); line-height:1.55;
+  }
+  .restart{ margin-top:18px; text-align:center; }
+
+  .data-section{ margin-bottom:30px; }
+  .data-title{
+    font-family:'Big Shoulders Display', sans-serif;
+    font-weight:700; font-size:21px; margin:0 0 4px;
+  }
+  .data-sub{ color:var(--text-muted); font-size:13.5px; margin-bottom:16px; }
+  .metric-grid{
+    display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:18px;
+  }
+  .metric-card{
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+    padding:14px 16px;
+  }
+  .metric-label{
+    font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.04em;
+    color:var(--text-muted); text-transform:uppercase; margin:0 0 6px;
+  }
+  .metric-value{
+    font-family:'Big Shoulders Display', sans-serif; font-weight:800; font-size:26px; margin:0;
+  }
+  .elig-card{
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+    padding:16px;
+  }
+  .elig-title{ font-size:13.5px; font-weight:600; margin:0 0 4px; }
+  .elig-note{ color:var(--text-muted); font-size:12.5px; margin:0 0 12px; line-height:1.5; }
+  .elig-bar{
+    display:flex; width:100%; height:28px; border-radius:6px; overflow:hidden;
+    border:1px solid var(--line);
+  }
+  .elig-seg-below{ background:var(--gold); }
+  .elig-seg-above{ background:var(--wood); }
+  .elig-legend{ display:flex; gap:18px; margin-top:10px; font-size:12.5px; color:var(--text-muted); }
+  .elig-dot{ display:inline-block; width:9px; height:9px; border-radius:2px; margin-right:6px; vertical-align:middle; }
+  .data-source{ font-size:11.5px; color:var(--text-muted); margin-top:10px; }
+
+  .ask-box{
+    background:var(--card-soft); border:1px solid var(--line); border-radius:10px;
+    padding:16px; margin-top:4px;
+  }
+  .ask-title{ font-size:15px; font-weight:700; margin:0 0 4px; }
+  .ask-hint{ color:var(--text-muted); font-size:12.5px; margin:0 0 12px; line-height:1.5; }
+  .ask-row{ display:flex; gap:8px; }
+  .ask-input{
+    flex:1; padding:11px 13px; border-radius:9px; border:1.5px solid var(--line);
+    background:var(--card); color:var(--text); font-family:'Work Sans', sans-serif; font-size:14px;
+  }
+  .ask-input:focus{ outline:none; border-color:var(--gold); }
+  .ask-btn{
+    background:var(--gold); color:#fbf8ef; border:none; border-radius:9px;
+    padding:0 18px; font-weight:700; font-size:14px; cursor:pointer; font-family:'Work Sans',sans-serif;
+  }
+  .ask-btn:disabled{ opacity:0.5; cursor:not-allowed; }
+  .ask-examples{ display:flex; flex-wrap:wrap; gap:6px; margin:10px 0 0; }
+  .ask-chip{
+    font-size:12px; background:var(--card); border:1px solid var(--line); color:var(--text-muted);
+    padding:6px 10px; border-radius:20px; cursor:pointer; font-family:'Work Sans', sans-serif;
+  }
+  .ask-chip:hover{ border-color:var(--gold); color:var(--text); }
+  .ask-answer{
+    margin-top:14px; padding:13px 15px; background:var(--card); border-radius:9px;
+    border:1px solid var(--line); font-size:14px; line-height:1.6; white-space:pre-wrap;
+  }
+  .ask-loading{ color:var(--text-muted); font-size:13px; margin-top:12px; font-style:italic; }
+  .ask-error{ color:var(--coral); font-size:13px; margin-top:12px; }
+
+  @media (prefers-reduced-motion: reduce){
+    .jar, .btn-primary{ transition:none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header-row">
+    <div class="eyebrow" id="eyebrow"></div>
+    <button class="lang-btn" id="langBtn"></button>
+  </div>
+  <h1 id="h1"></h1>
+  <p class="sub" id="sub"></p>
+
+  <div class="data-section">
+    <p class="data-title" id="dataTitle"></p>
+    <p class="data-sub" id="dataSub"></p>
+
+    <div class="metric-grid">
+      <div class="metric-card">
+        <p class="metric-label" id="m1label"></p>
+        <p class="metric-value">89,810</p>
+      </div>
+      <div class="metric-card">
+        <p class="metric-label" id="m2label"></p>
+        <p class="metric-value">10.4%</p>
+      </div>
+      <div class="metric-card">
+        <p class="metric-label" id="m3label"></p>
+        <p class="metric-value">$3.76</p>
+      </div>
+      <div class="metric-card">
+        <p class="metric-label" id="m4label"></p>
+        <p class="metric-value">$64.1M</p>
+      </div>
+    </div>
+
+    <div class="elig-card">
+      <p class="elig-title" id="eligTitle"></p>
+      <p class="elig-note" id="eligNote"></p>
+      <div class="elig-bar">
+        <div class="elig-seg-below" style="width:49%"></div>
+        <div class="elig-seg-above" style="width:51%"></div>
+      </div>
+      <div class="elig-legend">
+        <span><span class="elig-dot" style="background:var(--gold)"></span><span id="eligBelow"></span></span>
+        <span><span class="elig-dot" style="background:var(--wood)"></span><span id="eligAbove"></span></span>
+      </div>
+      <p class="data-source" id="dataSource"></p>
+    </div>
+  </div>
+
+  <div class="shelf-wrap">
+    <div class="shelf" id="shelf"></div>
+    <div class="shelf-label" id="shelfLabel">STEP 1 OF 4</div>
+  </div>
+
+  <div class="card" id="card"></div>
+
+</div>
+
+<script>
+const T = {
+  en: {
+    eyebrow: "Middlesex County · NJ",
+    h1: "Find food help<br>near Edison.",
+    sub: "Helping people in Edison and surrounding Middlesex County towns. Answer a few quick questions — no judgment, no wrong answers, just real help nearby.",
+    langBtnLabel: "Español",
+    dataTitle: "The need, in real numbers",
+    dataSub: "2023 data for Middlesex County, NJ",
+    m1: "Food insecure residents",
+    m2: "Food insecurity rate",
+    m3: "Average meal cost",
+    m4: "Annual food budget shortfall",
+    eligTitle: "Not everyone who's food insecure qualifies for SNAP",
+    eligNote: "Of food insecure people in Middlesex County, nearly half earn too much to qualify for SNAP — meaning pantries and other community resources matter just as much as government programs.",
+    eligBelow: "49% below SNAP threshold",
+    eligAbove: "51% above SNAP threshold",
+    dataSource: "Source: NJ Office of the Food Security Advocate, County Data Chartbook (Middlesex County), using Feeding America Map the Meal Gap 2023 estimates.",
+    stepOf: function(n,total){ return "STEP " + n + " OF " + total; },
+    yourResults: "YOUR RESULTS",
+    s0title: "What's going on right now?",
+    s0hint: "Pick what fits best — you can change your answers anytime.",
+    s0opt1: "I need food this week", s0opt1hint: "Pantries and emergency food near you",
+    s0opt2: "I'm trying to set up longer-term help", s0opt2hint: "SNAP, WIC, and monthly support",
+    s0opt3: "I just lost a job or my income dropped", s0opt3hint: "Both quick help and longer-term programs",
+    s0opt4: "I'm not sure what I need yet", s0opt4hint: "We'll show you the full picture",
+    continueBtn: "Continue",
+    s1title: "How many people in your household?",
+    s1hint: "Include yourself and anyone you regularly buy and cook food for.",
+    back: "Back",
+    s2title: "Are you already getting any of these?",
+    s2hint: "Select all that apply — or none.",
+    snapLabel: "SNAP / Food Stamps",
+    wicLabel: "WIC",
+    noneLabel: "None of these yet",
+    s3title: "Which town are you closest to?",
+    s3hint: "This helps point to nearby pantries first.",
+    seeResults: "See my results",
+    townEdison: "Edison", townMetuchen: "Metuchen", townWoodbridge: "Woodbridge",
+    townNewBrunswick: "New Brunswick", townPiscataway: "Piscataway", townOther: "Elsewhere in Middlesex County",
+    resultsHeading: "Here's where to start",
+    resultsLead: function(hh,town){ return "Based on what you shared — household of " + hh + ", near " + town + ". These are real Middlesex County and NJ resources, not a final decision — every program makes its own call."; },
+    groupThisWeek: "Food this week",
+    nj211name: "NJ 211",
+    nj211desc: "Free, confidential help finding the nearest food pantry or soup kitchen, day or night.",
+    nj211contact: "Call 211 · text your ZIP to 898-211 · nj211.org",
+    replenishName: "REPLENISH — Middlesex County Food Directory",
+    replenishDesc: "The county's own interactive map of food pantries across all 25 municipalities, including several in and around Edison.",
+    cfbnjName: "Community FoodBank of New Jersey",
+    cfbnjDesc: "Regional food bank serving Middlesex County's pantry network — can help you locate a partner pantry near you.",
+    cfbnjContact: "(908) 355-3663 · cfbnj.org",
+    groupEdison: "Edison-specific",
+    edisonTwpName: "Edison Township emergency food assistance",
+    edisonTwpDesc: "A short-term supply of food once a month for Edison Township residents. Proof of residence (license or utility bill) is typically requested — call ahead to confirm current hours.",
+    edisonTwpContact: "Via REPLENISH directory or NJ 211 for current contact & hours",
+    jrfName: "Jewish Renaissance Foundation — Family Assistance Center",
+    jrfDesc: "Serves Edison along with Carteret, Metuchen, Highland Park, Sayreville, Perth Amboy, South Amboy, and Woodbridge. Registration and appointment required.",
+    jrfContact: 'Search "JRF Family Assistance Center NJ" or call NJ 211',
+    groupLongTerm: "Longer-term support",
+    snapName: "SNAP (Food Stamps)",
+    snapDesc: "Monthly benefits on an EBT card for groceries. Income limits depend on household size and are updated each October — the only way to know for sure is to check or apply.",
+    wicName: "WIC (Women, Infants & Children)",
+    wicDesc: "For anyone pregnant, postpartum, or with a child under 5 — covers healthy groceries plus nutrition support. Can be combined with SNAP.",
+    wicContact: "nj.gov/health/fhs/wic",
+    boardName: "Middlesex County Board of Social Services",
+    boardDesc: "The local office that processes SNAP, WIC referrals, and other assistance for county residents.",
+    boardContact: "Search \"Middlesex County Board of Social Services NJ\" for the current phone line — numbers vary by office location",
+    groupEnrolled: "Since you're already enrolled",
+    recertName: "Recertification reminder",
+    recertDesc: "If anything changed — income, household size, or address — let your caseworker know so your benefits stay accurate and don't lapse at renewal.",
+    askTitle: "Have a specific situation?",
+    askHint: "Ask anything these programs don't cover — like transportation, documents, or language. Powered by Claude, using what you shared above.",
+    askPlaceholder: "e.g. What if I don't have a car or ID?",
+    askBtn: "Ask",
+    chip1: "No car?", chip1q: "I don't have a car, how do I get to a pantry?",
+    chip2: "Immigration status?", chip2q: "I don't have legal status, can I still get help?",
+    chip3: "Language help?", chip3q: "I don't speak English well, is help available in my language?",
+    askLoading: "Thinking through your situation…",
+    askEmpty: "No answer came back — try rephrasing, or call NJ 211 directly.",
+    askError: "Something went wrong reaching the assistant. For now, NJ 211 (call 211 or text your ZIP to 898-211) can answer most situations directly.",
+    disclaimer: "This tool gives directions, not decisions — it doesn't determine eligibility for any program. Income limits and rules change and vary by household, so the agencies above will always have the final, accurate word. If you're in crisis and need food today, NJ 211 is the fastest path.",
+    startOver: "Start over",
+    situationUnspecified: "unspecified",
+    benefitsNone: "none yet"
+  },
+  es: {
+    eyebrow: "Condado de Middlesex · NJ",
+    h1: "Encuentra ayuda<br>con alimentos cerca de Edison.",
+    sub: "Ayudando a personas en Edison y los pueblos cercanos del condado de Middlesex. Responde unas preguntas rápidas — sin juicios, sin respuestas incorrectas, solo ayuda real y cercana.",
+    langBtnLabel: "English",
+    dataTitle: "La necesidad, en números reales",
+    dataSub: "Datos de 2023 para el condado de Middlesex, NJ",
+    m1: "Residentes con inseguridad alimentaria",
+    m2: "Tasa de inseguridad alimentaria",
+    m3: "Costo promedio de una comida",
+    m4: "Déficit anual del presupuesto de alimentos",
+    eligTitle: "No todas las personas con inseguridad alimentaria califican para SNAP",
+    eligNote: "De las personas con inseguridad alimentaria en el condado de Middlesex, casi la mitad gana demasiado para calificar para SNAP — lo que significa que las despensas y otros recursos comunitarios son tan importantes como los programas gubernamentales.",
+    eligBelow: "49% por debajo del límite de SNAP",
+    eligAbove: "51% por encima del límite de SNAP",
+    dataSource: "Fuente: Oficina del Defensor de Seguridad Alimentaria de NJ, Chartbook del Condado (Middlesex), usando estimaciones de Feeding America Map the Meal Gap 2023.",
+    stepOf: function(n,total){ return "PASO " + n + " DE " + total; },
+    yourResults: "TUS RESULTADOS",
+    s0title: "¿Qué está pasando ahora mismo?",
+    s0hint: "Elige lo que mejor se ajuste — puedes cambiar tus respuestas en cualquier momento.",
+    s0opt1: "Necesito comida esta semana", s0opt1hint: "Despensas y alimentos de emergencia cerca de ti",
+    s0opt2: "Estoy buscando ayuda a largo plazo", s0opt2hint: "SNAP, WIC y apoyo mensual",
+    s0opt3: "Acabo de perder mi empleo o bajaron mis ingresos", s0opt3hint: "Ayuda rápida y programas a largo plazo",
+    s0opt4: "Todavía no estoy seguro/a de lo que necesito", s0opt4hint: "Te mostraremos el panorama completo",
+    continueBtn: "Continuar",
+    s1title: "¿Cuántas personas hay en tu hogar?",
+    s1hint: "Incluye a ti mismo/a y a cualquier persona para quien regularmente compras y cocinas.",
+    back: "Atrás",
+    s2title: "¿Ya recibes alguno de estos beneficios?",
+    s2hint: "Selecciona todos los que apliquen — o ninguno.",
+    snapLabel: "SNAP / Cupones de alimentos",
+    wicLabel: "WIC",
+    noneLabel: "Ninguno de estos todavía",
+    s3title: "¿De qué pueblo estás más cerca?",
+    s3hint: "Esto ayuda a mostrar primero las despensas más cercanas.",
+    seeResults: "Ver mis resultados",
+    townEdison: "Edison", townMetuchen: "Metuchen", townWoodbridge: "Woodbridge",
+    townNewBrunswick: "New Brunswick", townPiscataway: "Piscataway", townOther: "Otro lugar del condado de Middlesex",
+    resultsHeading: "Aquí es donde empezar",
+    resultsLead: function(hh,town){ return "Según lo que compartiste — hogar de " + hh + " persona(s), cerca de " + town + ". Estos son recursos reales del condado de Middlesex y de NJ, no una decisión final — cada programa decide por su cuenta."; },
+    groupThisWeek: "Comida esta semana",
+    nj211name: "NJ 211",
+    nj211desc: "Ayuda gratuita y confidencial para encontrar la despensa o comedor comunitario más cercano, de día o de noche.",
+    nj211contact: "Llama al 211 · envía tu código postal por mensaje de texto al 898-211 · nj211.org",
+    replenishName: "REPLENISH — Directorio de Alimentos del Condado de Middlesex",
+    replenishDesc: "El mapa interactivo del condado con despensas de alimentos en los 25 municipios, incluyendo varias en Edison y sus alrededores.",
+    cfbnjName: "Community FoodBank of New Jersey",
+    cfbnjDesc: "Banco de alimentos regional que abastece a la red de despensas del condado de Middlesex — puede ayudarte a encontrar una despensa cercana.",
+    cfbnjContact: "(908) 355-3663 · cfbnj.org",
+    groupEdison: "Específico de Edison",
+    edisonTwpName: "Asistencia alimentaria de emergencia de Edison Township",
+    edisonTwpDesc: "Un suministro breve de alimentos una vez al mes para residentes de Edison Township. Generalmente se pide comprobante de residencia (licencia o factura de servicios) — llama antes para confirmar el horario actual.",
+    edisonTwpContact: "A través del directorio REPLENISH o NJ 211 para contacto y horario actuales",
+    jrfName: "Jewish Renaissance Foundation — Centro de Asistencia Familiar",
+    jrfDesc: "Atiende a Edison junto con Carteret, Metuchen, Highland Park, Sayreville, Perth Amboy, South Amboy y Woodbridge. Se requiere registro y cita.",
+    jrfContact: 'Busca "JRF Family Assistance Center NJ" o llama al NJ 211',
+    groupLongTerm: "Apoyo a largo plazo",
+    snapName: "SNAP (Cupones de alimentos)",
+    snapDesc: "Beneficios mensuales en una tarjeta EBT para comprar alimentos. Los límites de ingresos dependen del tamaño del hogar y se actualizan cada octubre — la única forma de saber con certeza es verificar o solicitar.",
+    wicName: "WIC (Mujeres, Bebés y Niños)",
+    wicDesc: "Para cualquier persona embarazada, en posparto, o con un niño menor de 5 años — cubre alimentos saludables y apoyo nutricional. Se puede combinar con SNAP.",
+    wicContact: "nj.gov/health/fhs/wic",
+    boardName: "Junta de Servicios Sociales del Condado de Middlesex",
+    boardDesc: "La oficina local que procesa SNAP, referencias de WIC y otra asistencia para residentes del condado.",
+    boardContact: "Busca \"Middlesex County Board of Social Services NJ\" para la línea telefónica actual — los números varían según la oficina",
+    groupEnrolled: "Ya que estás inscrito/a",
+    recertName: "Recordatorio de recertificación",
+    recertDesc: "Si algo cambió — ingresos, tamaño del hogar o dirección — avísale a tu trabajador/a social para que tus beneficios sigan siendo correctos y no se venzan al renovar.",
+    askTitle: "¿Tienes una situación específica?",
+    askHint: "Pregunta sobre lo que estos programas no cubren — como transporte, documentos o idioma. Funciona con Claude, usando lo que compartiste arriba.",
+    askPlaceholder: "ej. ¿Qué pasa si no tengo carro o identificación?",
+    askBtn: "Preguntar",
+    chip1: "¿Sin carro?", chip1q: "No tengo carro, ¿cómo llego a una despensa?",
+    chip2: "¿Estatus migratorio?", chip2q: "No tengo estatus legal, ¿puedo recibir ayuda igual?",
+    chip3: "¿Ayuda en español?", chip3q: "No hablo inglés bien, ¿hay ayuda disponible en español?",
+    askLoading: "Pensando en tu situación…",
+    askEmpty: "No llegó una respuesta — intenta reformular la pregunta, o llama directamente al NJ 211.",
+    askError: "Algo salió mal al contactar al asistente. Por ahora, NJ 211 (llama al 211 o envía tu código postal por mensaje al 898-211) puede responder la mayoría de las situaciones directamente.",
+    disclaimer: "Esta herramienta da orientación, no decisiones — no determina la elegibilidad para ningún programa. Los límites de ingresos y las reglas cambian y varían según el hogar, así que las agencias mencionadas arriba siempre tendrán la última palabra. Si estás en crisis y necesitas comida hoy, NJ 211 es el camino más rápido.",
+    startOver: "Empezar de nuevo",
+    situationUnspecified: "sin especificar",
+    benefitsNone: "ninguno todavía"
+  }
+};
+
+var lang = 'en';
+function t(key){ return T[lang][key]; }
+
+var state = { situation:null, household:1, benefits:[], town:'edison' };
+var step = 0;
+var TOTAL_STEPS = 4;
+
+function townLabel(key){
+  var map = { edison:'townEdison', metuchen:'townMetuchen', woodbridge:'townWoodbridge', newbrunswick:'townNewBrunswick', piscataway:'townPiscataway', other:'townOther' };
+  return t(map[key]);
+}
+function townOrder(){
+  return ['edison','metuchen','woodbridge','newbrunswick','piscataway','other'];
+}
+
+function renderHeader(){
+  document.getElementById('eyebrow').textContent = t('eyebrow');
+  document.getElementById('h1').innerHTML = t('h1');
+  document.getElementById('sub').textContent = t('sub');
+  document.getElementById('langBtn').textContent = t('langBtnLabel');
+  document.getElementById('dataTitle').textContent = t('dataTitle');
+  document.getElementById('dataSub').textContent = t('dataSub');
+  document.getElementById('m1label').textContent = t('m1');
+  document.getElementById('m2label').textContent = t('m2');
+  document.getElementById('m3label').textContent = t('m3');
+  document.getElementById('m4label').textContent = t('m4');
+  document.getElementById('eligTitle').textContent = t('eligTitle');
+  document.getElementById('eligNote').textContent = t('eligNote');
+  document.getElementById('eligBelow').textContent = t('eligBelow');
+  document.getElementById('eligAbove').textContent = t('eligAbove');
+  document.getElementById('dataSource').textContent = t('dataSource');
+  document.documentElement.lang = lang;
+}
+
+document.getElementById('langBtn').onclick = function(){
+  lang = lang === 'en' ? 'es' : 'en';
+  renderHeader();
+  render();
+};
+
+function renderShelf(){
+  var shelf = document.getElementById('shelf');
+  shelf.innerHTML = '';
+  for(var i=0;i<TOTAL_STEPS;i++){
+    var jar = document.createElement('div');
+    jar.className = 'jar' + (i < step ? ' filled' : '');
+    shelf.appendChild(jar);
+  }
+  document.getElementById('shelfLabel').textContent =
+    step < TOTAL_STEPS ? t('stepOf')(step+1, TOTAL_STEPS) : t('yourResults');
+}
+
+function go(n){ step = n; render(); }
+
+function render(){
+  renderShelf();
+  var card = document.getElementById('card');
+
+  if(step === 0){
+    card.innerHTML =
+      '<div class="q-title">' + t('s0title') + '</div>' +
+      '<div class="q-hint">' + t('s0hint') + '</div>' +
+      '<div class="options" id="opts">' +
+        optBtn('immediate', t('s0opt1'), t('s0opt1hint')) +
+        optBtn('ongoing', t('s0opt2'), t('s0opt2hint')) +
+        optBtn('incomeChange', t('s0opt3'), t('s0opt3hint')) +
+        optBtn('unsure', t('s0opt4'), t('s0opt4hint')) +
+      '</div>' +
+      '<div class="nav-row"><span></span><button class="btn-primary" id="next" ' + (state.situation ? '' : 'disabled') + '>' + t('continueBtn') + '</button></div>';
+    wireOptions('situation', function(){ document.getElementById('next').disabled = false; }, state.situation);
+    document.getElementById('next').onclick = function(){ go(1); };
+    return;
+  }
+
+  if(step === 1){
+    card.innerHTML =
+      '<div class="q-title">' + t('s1title') + '</div>' +
+      '<div class="q-hint">' + t('s1hint') + '</div>' +
+      '<div class="num-row">' +
+        '<button class="num-btn" id="dec">−</button>' +
+        '<div class="num-val" id="numVal">' + state.household + '</div>' +
+        '<button class="num-btn" id="inc">+</button>' +
+      '</div>' +
+      '<div class="nav-row">' +
+        '<button class="btn-ghost" id="back">' + t('back') + '</button>' +
+        '<button class="btn-primary" id="next">' + t('continueBtn') + '</button>' +
+      '</div>';
+    document.getElementById('dec').onclick = function(){ state.household = Math.max(1,state.household-1); document.getElementById('numVal').textContent = state.household; };
+    document.getElementById('inc').onclick = function(){ state.household = Math.min(15,state.household+1); document.getElementById('numVal').textContent = state.household; };
+    document.getElementById('back').onclick = function(){ go(0); };
+    document.getElementById('next').onclick = function(){ go(2); };
+    return;
+  }
+
+  if(step === 2){
+    card.innerHTML =
+      '<div class="q-title">' + t('s2title') + '</div>' +
+      '<div class="q-hint">' + t('s2hint') + '</div>' +
+      '<div class="options" id="opts">' +
+        optBtnMulti('snap', t('snapLabel')) +
+        optBtnMulti('wic', t('wicLabel')) +
+        optBtnMulti('none', t('noneLabel')) +
+      '</div>' +
+      '<div class="nav-row">' +
+        '<button class="btn-ghost" id="back">' + t('back') + '</button>' +
+        '<button class="btn-primary" id="next">' + t('continueBtn') + '</button>' +
+      '</div>';
+    document.querySelectorAll('#opts .opt').forEach(function(b){
+      b.classList.toggle('selected', state.benefits.indexOf(b.dataset.val) > -1);
+      b.onclick = function(){
+        var val = b.dataset.val;
+        if(val === 'none'){ state.benefits = ['none']; }
+        else {
+          state.benefits = state.benefits.filter(function(v){ return v!=='none'; });
+          var i = state.benefits.indexOf(val);
+          if(i>-1) state.benefits.splice(i,1); else state.benefits.push(val);
+        }
+        document.querySelectorAll('#opts .opt').forEach(function(o){ o.classList.toggle('selected', state.benefits.indexOf(o.dataset.val) > -1); });
+      };
+    });
+    document.getElementById('back').onclick = function(){ go(1); };
+    document.getElementById('next').onclick = function(){ go(3); };
+    return;
+  }
+
+  if(step === 3){
+    card.innerHTML =
+      '<div class="q-title">' + t('s3title') + '</div>' +
+      '<div class="q-hint">' + t('s3hint') + '</div>' +
+      '<div class="options" id="opts">' +
+        townOrder().map(function(k){ return optBtn(k, townLabel(k), ''); }).join('') +
+      '</div>' +
+      '<div class="nav-row">' +
+        '<button class="btn-ghost" id="back">' + t('back') + '</button>' +
+        '<button class="btn-primary" id="next" ' + (state.town ? '' : 'disabled') + '>' + t('seeResults') + '</button>' +
+      '</div>';
+    wireOptions('town', function(){ document.getElementById('next').disabled = false; }, state.town);
+    document.getElementById('back').onclick = function(){ go(2); };
+    document.getElementById('next').onclick = function(){ go(4); };
+    return;
+  }
+
+  if(step === 4){
+    renderResults(card);
+    return;
+  }
+}
+
+function optBtn(val,label,hint){
+  return '<button class="opt" data-val="' + val + '">' + label + (hint ? '<small>' + hint + '</small>' : '') + '</button>';
+}
+function optBtnMulti(val,label){
+  return '<button class="opt" data-val="' + val + '">' + label + '</button>';
+}
+function wireOptions(field, onPick, preset){
+  document.querySelectorAll('#opts .opt').forEach(function(b){
+    if(preset && b.dataset.val===preset) b.classList.add('selected');
+    b.onclick = function(){
+      document.querySelectorAll('#opts .opt').forEach(function(o){ o.classList.remove('selected'); });
+      b.classList.add('selected');
+      state[field] = b.dataset.val;
+      onPick();
+    };
+  });
+}
+
+function renderResults(card){
+  var hh = state.household;
+
+  var html = '<div class="results">' +
+    '<h2>' + t('resultsHeading') + '</h2>' +
+    '<p class="lead">' + t('resultsLead')(hh, townLabel(state.town)) + '</p>';
+
+  html += '<div class="res-group"><h3>' + t('groupThisWeek') + '</h3>' +
+    '<div class="res-card">' +
+      '<div class="name">' + t('nj211name') + '</div>' +
+      '<div class="desc">' + t('nj211desc') + '</div>' +
+      '<div class="contact">' + t('nj211contact') + '</div>' +
+    '</div>' +
+    '<div class="res-card">' +
+      '<div class="name">' + t('replenishName') + '</div>' +
+      '<div class="desc">' + t('replenishDesc') + '</div>' +
+      '<div class="contact"><a href="https://www.middlesexcountynj.gov/government/departments/department-of-community-services/replenish/need-food-assistance" target="_blank">middlesexcountynj.gov/replenish</a></div>' +
+    '</div>' +
+    '<div class="res-card">' +
+      '<div class="name">' + t('cfbnjName') + '</div>' +
+      '<div class="desc">' + t('cfbnjDesc') + '</div>' +
+      '<div class="contact">' + t('cfbnjContact') + '</div>' +
+    '</div>' +
+  '</div>';
+
+  if(state.town === 'edison'){
+    html += '<div class="res-group"><h3>' + t('groupEdison') + '</h3>' +
+      '<div class="res-card">' +
+        '<div class="name">' + t('edisonTwpName') + '</div>' +
+        '<div class="desc">' + t('edisonTwpDesc') + '</div>' +
+        '<div class="contact">' + t('edisonTwpContact') + '</div>' +
+      '</div>' +
+      '<div class="res-card">' +
+        '<div class="name">' + t('jrfName') + '</div>' +
+        '<div class="desc">' + t('jrfDesc') + '</div>' +
+        '<div class="contact">' + t('jrfContact') + '</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  html += '<div class="res-group"><h3>' + t('groupLongTerm') + '</h3>' +
+    '<div class="res-card">' +
+      '<div class="name">' + t('snapName') + '</div>' +
+      '<div class="desc">' + t('snapDesc') + '</div>' +
+      '<div class="contact"><a href="https://njsnap.gov" target="_blank">njsnap.gov</a> · <a href="https://njhelps.org" target="_blank">njhelps.org</a></div>' +
+    '</div>' +
+    '<div class="res-card">' +
+      '<div class="name">' + t('wicName') + '</div>' +
+      '<div class="desc">' + t('wicDesc') + '</div>' +
+      '<div class="contact">' + t('wicContact') + '</div>' +
+    '</div>' +
+    '<div class="res-card">' +
+      '<div class="name">' + t('boardName') + '</div>' +
+      '<div class="desc">' + t('boardDesc') + '</div>' +
+      '<div class="contact">' + t('boardContact') + '</div>' +
+    '</div>' +
+  '</div>';
+
+  if(state.benefits.indexOf('snap') > -1 || state.benefits.indexOf('wic') > -1){
+    html += '<div class="res-group"><h3>' + t('groupEnrolled') + '</h3>' +
+      '<div class="res-card">' +
+        '<div class="name">' + t('recertName') + '</div>' +
+        '<div class="desc">' + t('recertDesc') + '</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  html += '<div class="ask-box">' +
+    '<p class="ask-title">' + t('askTitle') + '</p>' +
+    '<p class="ask-hint">' + t('askHint') + '</p>' +
+    '<div class="ask-row">' +
+      '<input type="text" class="ask-input" id="askInput" placeholder="' + t('askPlaceholder') + '" />' +
+      '<button class="ask-btn" id="askBtn">' + t('askBtn') + '</button>' +
+    '</div>' +
+    '<div class="ask-examples">' +
+      '<button class="ask-chip" data-q="' + t('chip1q') + '">' + t('chip1') + '</button>' +
+      '<button class="ask-chip" data-q="' + t('chip2q') + '">' + t('chip2') + '</button>' +
+      '<button class="ask-chip" data-q="' + t('chip3q') + '">' + t('chip3') + '</button>' +
+    '</div>' +
+    '<div id="askResult"></div>' +
+  '</div>';
+
+  html += '<div class="disclaimer">' + t('disclaimer') + '</div>';
+  html += '<div class="restart"><button class="btn-ghost" id="restart">' + t('startOver') + '</button></div></div>';
+
+  card.innerHTML = html;
+  document.getElementById('restart').onclick = function(){ step=0; state.situation=null; state.household=1; state.benefits=[]; state.town='edison'; render(); };
+
+  document.querySelectorAll('.ask-chip').forEach(function(chip){
+    chip.onclick = function(){ document.getElementById('askInput').value = chip.dataset.q; askClaude(); };
+  });
+  document.getElementById('askBtn').onclick = askClaude;
+  document.getElementById('askInput').addEventListener('keydown', function(e){ if(e.key === 'Enter') askClaude(); });
+}
+
+function askClaude(){
+  var input = document.getElementById('askInput');
+  var question = input.value.trim();
+  if(!question) return;
+  var btn = document.getElementById('askBtn');
+  var resultBox = document.getElementById('askResult');
+  btn.disabled = true;
+  resultBox.innerHTML = '<div class="ask-loading">' + t('askLoading') + '</div>';
+
+  var benefitsText = (state.benefits.length && state.benefits.indexOf('none') === -1) ? state.benefits.join(', ') : t('benefitsNone');
+  var context = 'Household size: ' + state.household + '. Town: ' + townLabel(state.town) + ', Middlesex County, NJ. Current benefits: ' + benefitsText + '. Situation: ' + (state.situation || t('situationUnspecified')) + '. Respond in ' + (lang === 'es' ? 'Spanish' : 'English') + '.';
+
+  var systemPrompt = 'You help people in Middlesex County, New Jersey find food assistance. Be warm, brief, and dignified — never clinical or judgmental. Respond in the language requested in the context. Use the household context provided, but only the real NJ/Middlesex resources already known to be reliable: NJ 211 (call 211 or text your ZIP to 898-211), NJSNAP.gov and njhelps.org for SNAP, nj.gov/health/fhs/wic for WIC, and the Middlesex County REPLENISH food pantry directory at middlesexcountynj.gov. Do not invent specific pantry names, addresses, phone numbers, or hours you are not certain of — instead point the person to NJ 211 or REPLENISH to find current, verified options. Keep answers under 120 words.';
+
+  fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-6",
+      max_tokens: 1000,
+      system: systemPrompt,
+      messages: [
+        { role: "user", content: "Context: " + context + "\n\nQuestion: " + question }
+      ]
+    })
+  }).then(function(response){ return response.json(); })
+    .then(function(data){
+      var text = (data.content || []).map(function(b){ return b.text || ''; }).join('\n').trim();
+      resultBox.innerHTML = text
+        ? '<div class="ask-answer">' + text.replace(/</g,'&lt;') + '</div>'
+        : '<div class="ask-error">' + t('askEmpty') + '</div>';
+    })
+    .catch(function(err){
+      resultBox.innerHTML = '<div class="ask-error">' + t('askError') + '</div>';
+    })
+    .finally(function(){
+      btn.disabled = false;
+    });
+}
+
+renderHeader();
+render();
+</script>
+</body>
+</html>
